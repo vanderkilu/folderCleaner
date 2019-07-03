@@ -13,8 +13,5 @@
   ],
   "author": "vanderkiliku@gmail.com",
   "license": "ISC",
-  "dependencies": {
-    "file-type": "^12.0.0",
-    "read-chunk": "^3.2.0"
-  }
+  "dependencies": {}
 }

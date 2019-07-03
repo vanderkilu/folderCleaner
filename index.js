@@ -1,5 +1,7 @@
 const fs = require('fs')
 const path = require('path')
+const readChunk = require('read-chunk')
+const fileType = require('file-type')
 
 function isDirectory(dir) {
    try {
@@ -25,10 +27,13 @@ function checkFile(dir) {
         if (err) throw err
         files.forEach(file => {
             let fullPath = path.join(dir, file)
-            console.log(fullPath)
+            
         })
     })
 }
 
-const url = path.join(__dirname, 'test')
-checkFile(url)
+const url = path.join(__dirname, 'test', 'file.txt')
+console.log(url)
+let chunk = readChunk.sync(url, 0, fileType.minimumBytes)
+console.log(fileType(chunk))
+// checkFile(url)
