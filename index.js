@@ -38,6 +38,13 @@ function getFileMimeType(dir, cb) {
     })
 }
 
+function printMessage(fileName) {
+    return (err, newDir)=> {
+        if (err) throw err
+        console.log(`moved ${fileName} to  ${newDir}`)
+    } 
+}
+
 function groupFiles(dir) {
     return getFileMimeType(dir, (err, mimeType, file)=> {
         if (err) throw err
@@ -45,22 +52,13 @@ function groupFiles(dir) {
         const fileName = path.basename(file)
         switch(type) {
             case 'text': {
-                return moveToNewDirectory(file, 'Document', (err, newDir)=> {
-                    if (err) throw err
-                    console.log(`moved ${fileName} to  ${newDir}`)
-                })
+                return moveToNewDirectory(file, 'Document', printMessage(fileName))
             }
             case 'application': {
-                return moveToNewDirectory(file, 'Application', (err, newDir)=> {
-                    if (err) throw err
-                    console.log(`moved ${fileName} to  ${newDir}`)
-                })
+                return moveToNewDirectory(file, 'Application', printMessage(fileName))
             }
             case 'image': {
-                return moveToNewDirectory(file, 'Image', (err, newDir)=> {
-                    if (err) throw err
-                    console.log(`moved ${fileName} to  ${newDir}`)
-                })
+                return moveToNewDirectory(file, 'Application', printMessage(fileName))
             }
             default: return
         }
