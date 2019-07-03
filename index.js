@@ -29,6 +29,7 @@ function getFileMimeType(dir, cb) {
         if (err) return cb(err, null)
         files.forEach(file => {
             let fullPath = path.join(dir, file)
+            console.log(fullPath)
             exec(`file ${fullPath} --mime-type -b`, (err,stdout, stderr)=> {
                 if(err) return cb(err, null)
                 if(stderr) process.exit()
