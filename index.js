@@ -1,10 +1,12 @@
 const fs = require('fs')
 const path = require('path')
 const exec = require('child_process').exec
+const process = require('process')
 
 
 function isDirectory(dir) {
    try {
+    //    process.chdir(dir)
        return fs.lstatSync(dir).isDirectory()
    }
    catch(err) {
@@ -29,6 +31,7 @@ function getFileMimeType(dir, cb) {
             let fullPath = path.join(dir, file)
             exec(`file ${fullPath} --mime-type -b`, (err,stdout, stderr)=> {
                 if(err) return cb(err, null)
+                if(stderr) process.exit()
                 cb(null, stdout, fullPath)
             })
         })
@@ -36,43 +39,59 @@ function getFileMimeType(dir, cb) {
 }
 
 function groupFiles(dir) {
-    getFileMimeType(dir, (err, mimeType, file)=> {
+    return getFileMimeType(dir, (err, mimeType, file)=> {
         if (err) throw err
         const type = mimeType.split('/')[0]
+        const fileName = path.basename(file)
         switch(type) {
             case 'text': {
-                return moveToNewDirectory(file, 'Document')
+                return moveToNewDirectory(file, 'Document', (err, newDir)=> {
+                    if (err) throw err
+                    console.log(`moved ${fileName} to  ${newDir}`)
+                })
             }
             case 'application': {
-                return moveToNewDirectory(file, 'Application')
+                return moveToNewDirectory(file, 'Application', (err, newDir)=> {
+                    if (err) throw err
+                    console.log(`moved ${fileName} to  ${newDir}`)
+                })
             }
+            case 'image': {
+                return moveToNewDirectory(file, 'Image', (err, newDir)=> {
+                    if (err) throw err
+                    console.log(`moved ${fileName} to  ${newDir}`)
+                })
+            }
+            default: return
         }
     })
 }
 
-function moveToNewDirectory(file, folder) {
+function moveToNewDirectory(file, folder, cb) {
     const fileName = path.basename(file)
-    const dirName = path.basename(path.dirname(file))
+    const dirName = path.dirname(file)
     const newDir = path.join(dirName, folder)
     const newPath = path.resolve(newDir, fileName)
-
+    
+   
     if (fs.existsSync(newDir)) {
         fs.rename(file, newPath, (err)=> {
-            if (err) throw err
-            console.log(`moved ${fileName} to ${newDir}`)
+            if (err) return cb(err, null)
+            cb(null, newDir)
         })   
     }
     else {
         fs.mkdir(newDir, (err)=> {
-            if (err) throw err
+            if (err) return cb(err, null)
             fs.rename(file, newPath, (err)=> {
-                if (err) throw err
-                console.log(`moved ${fileName} to ${newDir}`)
-            })   
+                if (err) cb(err, null)
+                cb(null, newDir)
+            }) 
         })
     }
    
 }
 
-const url = path.join(__dirname, 'test')
+// const url = path.join(__dirname, 'test')
+const url = '/home/vndrkl/Documents'
 groupFiles(url)
