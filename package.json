@@ -1,0 +1,19 @@
+{
+  "name": "fileorganiser",
+  "version": "1.0.0",
+  "description": "a tool to help organise files",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "file",
+    "organiser",
+    "tool"
+  ],
+  "author": "vanderkiliku@gmail.com",
+  "license": "ISC",
+  "dependencies": {
+    "file-type": "^12.0.0"
+  }
+}
