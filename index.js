@@ -52,6 +52,8 @@ function printMessage(fileName) {
     } 
 }
 
+//
+
 function groupFiles(dir) {
     return getFileMimeType(dir, (err, mimeType, file)=> {
         if (err) throw err
