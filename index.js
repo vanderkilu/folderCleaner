@@ -29,14 +29,20 @@ function getFileMimeType(dir, cb) {
         if (err) return cb(err, null)
         files.forEach(file => {
             let fullPath = path.join(dir, file)
-            console.log(fullPath)
-            exec(`file ${fullPath} --mime-type -b`, (err,stdout, stderr)=> {
+            exec(`file ${escapeWhiteSpace(fullPath)} --mime-type -b`, 
+            (err,stdout, stderr)=> {
                 if(err) return cb(err, null)
                 if(stderr) process.exit()
                 cb(null, stdout, fullPath)
             })
         })
     })
+}
+
+//helpers
+
+function escapeWhiteSpace(fullPath) {
+    return fullPath.replace(/(\s+)/g, '\\$1')
 }
 
 function printMessage(fileName) {
@@ -59,7 +65,13 @@ function groupFiles(dir) {
                 return moveToNewDirectory(file, 'Application', printMessage(fileName))
             }
             case 'image': {
-                return moveToNewDirectory(file, 'Application', printMessage(fileName))
+                return moveToNewDirectory(file, 'Image', printMessage(fileName))
+            }
+            case 'audio': {
+                return moveToNewDirectory(file, 'Audio', printMessage(fileName))
+            }
+            case 'video': {
+                return moveToNewDirectory(file, 'Video', printMessage(fileName))
             }
             default: return
         }
