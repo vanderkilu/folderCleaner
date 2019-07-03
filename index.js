@@ -2,6 +2,7 @@ const fs = require('fs')
 const path = require('path')
 const exec = require('child_process').exec
 
+
 function isDirectory(dir) {
    try {
        return fs.lstatSync(dir).isDirectory()
@@ -21,17 +22,57 @@ function getFiles(dir, cb) {
     })
 }
 
-function checkFile(dir) {
-    getFiles(dir, (err, files)=> {
-        if (err) throw err
+function getFileMimeType(dir, cb) {
+    return getFiles(dir, (err, files)=> {
+        if (err) return cb(err, null)
         files.forEach(file => {
             let fullPath = path.join(dir, file)
             exec(`file ${fullPath} --mime-type -b`, (err,stdout, stderr)=> {
-                console.log(stdout)
+                if(err) return cb(err, null)
+                cb(null, stdout, fullPath)
             })
         })
     })
 }
 
+function groupFiles(dir) {
+    getFileMimeType(dir, (err, mimeType, file)=> {
+        if (err) throw err
+        const type = mimeType.split('/')[0]
+        switch(type) {
+            case 'text': {
+                return moveToNewDirectory(file, 'Document')
+            }
+            case 'application': {
+                return moveToNewDirectory(file, 'Application')
+            }
+        }
+    })
+}
+
+function moveToNewDirectory(file, folder) {
+    const fileName = path.basename(file)
+    const dirName = path.basename(path.dirname(file))
+    const newDir = path.join(dirName, folder)
+    const newPath = path.resolve(newDir, fileName)
+
+    if (fs.existsSync(newDir)) {
+        fs.rename(file, newPath, (err)=> {
+            if (err) throw err
+            console.log(`moved ${fileName} to ${newDir}`)
+        })   
+    }
+    else {
+        fs.mkdir(newDir, (err)=> {
+            if (err) throw err
+            fs.rename(file, newPath, (err)=> {
+                if (err) throw err
+                console.log(`moved ${fileName} to ${newDir}`)
+            })   
+        })
+    }
+   
+}
+
 const url = path.join(__dirname, 'test')
-checkFile(url)
+groupFiles(url)
