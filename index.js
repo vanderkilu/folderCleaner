@@ -4,6 +4,10 @@ const exec = require('child_process').exec
 const process = require('process')
 
 
+function getDirectoryPath() {
+    
+}
+
 function isDirectory(dir) {
    try {
     //    process.chdir(dir)
