@@ -11,7 +11,12 @@
     "organiser",
     "tool"
   ],
+  "bin": {
+    "clean-folder": "./index.js"
+  },
   "author": "vanderkiliku@gmail.com",
   "license": "ISC",
-  "dependencies": {}
+  "dependencies": {
+    "mkdirp": "^0.5.1"
+  }
 }

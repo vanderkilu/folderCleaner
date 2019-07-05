@@ -1,7 +1,11 @@
+#!/usr/bin/env node
+
+
 const fs = require('fs')
 const path = require('path')
 const exec = require('child_process').exec
 const process = require('process')
+const mkdirp = require('mkdirp')
 
 
 
@@ -30,7 +34,7 @@ function getFileMimeType(dir, cb) {
         if (err) return cb(err, null)
         files.forEach(file => {
             let fullPath = path.join(dir, file)
-            exec(`file ${escapeWhiteSpace(fullPath)} --mime-type -b`, 
+            exec(`file "${fullPath}" --mime-type -b`, 
             (err,stdout, stderr)=> {
                 if(err) return cb(err, null)
                 if(stderr) process.exit()
@@ -41,10 +45,6 @@ function getFileMimeType(dir, cb) {
 }
 
 //helpers
-
-function escapeWhiteSpace(fullPath) {
-    return fullPath.replace(/(\s+)/g, '\\$1')
-}
 
 function printMessage(fileName) {
     return (err, newDir)=> {
@@ -86,24 +86,14 @@ function moveToNewDirectory(file, folder, cb) {
     const dirName = path.dirname(file)
     const newDir = path.join(dirName, folder)
     const newPath = path.resolve(newDir, fileName)
-    
-   
-    if (fs.existsSync(newDir)) {
+
+    mkdirp(newDir, (err)=> {
+        if (err) return cb(err, null)
         fs.rename(file, newPath, (err)=> {
             if (err) return cb(err, null)
             cb(null, newDir)
         })   
-    }
-    else {
-        fs.mkdir(newDir, (err)=> {
-            if (err) return cb(err, null)
-            fs.rename(file, newPath, (err)=> {
-                if (err) cb(err, null)
-                cb(null, newDir)
-            }) 
-        })
-    }
-   
+    })
 }
 
 
