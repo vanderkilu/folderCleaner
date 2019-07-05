@@ -4,9 +4,7 @@ const exec = require('child_process').exec
 const process = require('process')
 
 
-function getDirectoryPath() {
-    
-}
+
 
 function isDirectory(dir) {
    try {
@@ -109,6 +107,14 @@ function moveToNewDirectory(file, folder, cb) {
    
 }
 
-// const url = path.join(__dirname, 'test')
-const url = '/home/vndrkl/Documents'
-groupFiles(url)
+
+function init() {
+    const directoryPath = process.argv.slice(2).join("")
+    if (directoryPath === "") {
+        console.log('you have to provide a directory path')
+        return 
+    }
+    groupFiles(directoryPath)
+}
+
+init()
