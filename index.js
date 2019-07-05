@@ -8,7 +8,6 @@ const process = require('process')
 
 function isDirectory(dir) {
    try {
-    //    process.chdir(dir)
        return fs.lstatSync(dir).isDirectory()
    }
    catch(err) {
