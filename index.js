@@ -44,7 +44,7 @@ function getFileMimeType(dir, cb) {
     })
 }
 
-//helpers
+
 
 function printMessage(fileName) {
     return (err, newDir)=> {
@@ -53,7 +53,7 @@ function printMessage(fileName) {
     } 
 }
 
-//
+
 
 function groupFiles(dir) {
     return getFileMimeType(dir, (err, mimeType, file)=> {
@@ -62,19 +62,19 @@ function groupFiles(dir) {
         const fileName = path.basename(file)
         switch(type) {
             case 'text': {
-                return moveToNewDirectory(file, 'Document', printMessage(fileName))
+                return moveToNewDirectory(file, 'Documents', printMessage(fileName))
             }
             case 'application': {
-                return moveToNewDirectory(file, 'Application', printMessage(fileName))
+                return moveToNewDirectory(file, 'Applications', printMessage(fileName))
             }
             case 'image': {
-                return moveToNewDirectory(file, 'Image', printMessage(fileName))
+                return moveToNewDirectory(file, 'Images', printMessage(fileName))
             }
             case 'audio': {
-                return moveToNewDirectory(file, 'Audio', printMessage(fileName))
+                return moveToNewDirectory(file, 'Audios', printMessage(fileName))
             }
             case 'video': {
-                return moveToNewDirectory(file, 'Video', printMessage(fileName))
+                return moveToNewDirectory(file, 'Videos', printMessage(fileName))
             }
             default: return
         }
