@@ -5,6 +5,7 @@ a node.js script to help clean a directory by moving files into standard directo
 ```
 git clone https://github.com/vanderkilu/folderCleaner.git
 cd folderCleaner
+npm install
 node index.js <path-to-folder-to-clean>
 
 ```
